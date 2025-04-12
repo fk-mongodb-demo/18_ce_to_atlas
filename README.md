@@ -163,3 +163,41 @@ fk0:PRIMARY> rs.hello()
         "operationTime" : Timestamp(1744439543, 1)
 }
 ```
+
+## Populate RS with sample documents
+
+Execute this insert commands 
+```
+db.col1.insertOne({"code": 1})
+{
+        "acknowledged" : true,
+        "insertedId" : ObjectId("67fa0953080413f2d1181c5d")
+}
+
+db.col1.insertOne({"code": 2})
+{
+        "acknowledged" : true,
+        "insertedId" : ObjectId("67fa0955080413f2d1181c5e")
+}
+
+db.col1.insertOne({"code": 3})
+{
+        "acknowledged" : true,
+        "insertedId" : ObjectId("67fa0956080413f2d1181c5f")
+}
+
+db.col1.insertOne({"code": 4})
+{
+        "acknowledged" : true,
+        "insertedId" : ObjectId("67fa0957080413f2d1181c60")
+}
+```
+
+Check the content of the collections
+```
+fk0:PRIMARY> db.col1.find()
+{ "_id" : ObjectId("67fa0953080413f2d1181c5d"), "code" : 1 }
+{ "_id" : ObjectId("67fa0955080413f2d1181c5e"), "code" : 2 }
+{ "_id" : ObjectId("67fa0956080413f2d1181c5f"), "code" : 3 }
+{ "_id" : ObjectId("67fa0957080413f2d1181c60"), "code" : 4 }
+```
