@@ -250,7 +250,7 @@ dpkg -i mongodb-database-tools-ubuntu2404-x86_64-100.12.0.deb
 
 Export documents from CE 4.4.6 (only 2 documents, with query)
 ```
-mongodump --db=db1 --collection=col1 -q='{ "code" : {"$lte": 2} }' --host localhost --port 27017 -u fkadmin -p fkpassword --authenticationDatabase=admin -o partial
+mongodump --db=db1 --collection=col1 -q='{ "code" : {"$lte": 2} }' --host localhost --port 27017 -u xxxxx -p xxxxx --authenticationDatabase=admin -o partial
 ```
 
 Output
