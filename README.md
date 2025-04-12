@@ -223,8 +223,8 @@ Add admin user
 use admin
 db.createUser(
     {
-        user: "fkadmin",
-        pwd: "fkpassword",
+        user: "xxxxx",
+        pwd: "xxxxx",
         roles: [
             {
                 "role": "root",
@@ -237,7 +237,7 @@ db.createUser(
 
 Verify login using Mongo Shell
 ```
-mongo --host localhost --port 27017 -u fkadmin -p fkpassword
+mongo --host localhost --port 27017 -u xxxxx -p xxxxx
 ```
 
 ## Run mongodump
@@ -248,7 +248,36 @@ wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2404-x86_6
 dpkg -i mongodb-database-tools-ubuntu2404-x86_64-100.12.0.deb
 ```
 
-Export documents
+Export documents from CE 4.4.6 (only 2 documents, with query)
 ```
-mongodump -h localhost -p 27017 -d db1 -c col1 -u fkadmin -p fkpassword -o all.json
+mongodump --db=db1 --collection=col1 -q='{ "code" : {"$lte": 2} }' --host localhost --port 27017 -u fkadmin -p fkpassword --authenticationDatabase=admin -o partial
 ```
+
+Output
+```
+2025-04-12T07:11:38.771+0000    writing db1.col1 to partial/db1/col1.bson
+2025-04-12T07:11:38.772+0000    done dumping db1.col1 (2 documents)
+```
+
+## Run mongorestore
+
+Import documents directly into Atlas
+```
+mongorestore --uri="mongodb+srv://xxxxx:xxxxx@prd.hixjx.mongodb.net/"  partial
+```
+
+Output 
+```
+2025-04-12T07:12:16.696+0000    preparing collections to restore from
+2025-04-12T07:12:16.697+0000    don't know what to do with file "partial/db1/prelude.json", skipping...
+2025-04-12T07:12:16.697+0000    reading metadata for db1.col1 from partial/db1/col1.metadata.json
+2025-04-12T07:12:16.749+0000    restoring db1.col1 from partial/db1/col1.bson
+2025-04-12T07:12:16.781+0000    finished restoring db1.col1 (2 documents, 0 failures)
+2025-04-12T07:12:16.781+0000    no indexes to restore for collection db1.col1
+2025-04-12T07:12:16.781+0000    2 document(s) restored successfully. 0 document(s) failed to restore.
+```
+
+## Verify documents in Atlas
+
+![image](https://github.com/user-attachments/assets/71cff522-6223-462c-82bf-080aa15e8241)
+
