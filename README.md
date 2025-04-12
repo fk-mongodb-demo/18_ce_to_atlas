@@ -201,3 +201,54 @@ fk0:PRIMARY> db.col1.find()
 { "_id" : ObjectId("67fa0956080413f2d1181c5f"), "code" : 3 }
 { "_id" : ObjectId("67fa0957080413f2d1181c60"), "code" : 4 }
 ```
+
+## Enable security
+
+Create key file
+```
+openssl rand -base64 756 > /app/fk0_key
+chmod 400 /app/fk0_key
+chown mongodb /app/fk0_key
+```
+
+Add these lines into the /etc/mongod.conf
+```
+security:
+authorization: enabled
+keyFile: /app/fk0_key
+```
+
+Add admin user
+```
+use admin
+db.createUser(
+    {
+        user: "fkadmin",
+        pwd: "fkpassword",
+        roles: [
+            {
+                "role": "root",
+                "db": "admin"
+            }
+        ],
+    }
+)
+```
+
+Verify login using Mongo Shell
+```
+mongo --host localhost --port 27017 -u fkadmin -p fkpassword
+```
+
+## Run mongodump
+
+Download tools and install
+```
+wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2404-x86_64-100.12.0.deb
+dpkg -i mongodb-database-tools-ubuntu2404-x86_64-100.12.0.deb
+```
+
+Export documents
+```
+mongodump -h localhost -p 27017 -d db1 -c col1 -u fkadmin -p fkpassword -o all.json
+```
