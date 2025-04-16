@@ -281,3 +281,38 @@ Output
 
 ![image](https://github.com/user-attachments/assets/71cff522-6223-462c-82bf-080aa15e8241)
 
+
+## Dump and Restore Monitoring
+
+During dump, you can see the total number of docs have been successfully dumped, example like below
+```
+2025-04-16T09:53:55.288+0000    writing db1.col1 to partial/db1/col1.bson
+2025-04-16T09:53:55.290+0000    writing db1.col3 to partial/db1/col3.bson
+2025-04-16T09:53:55.291+0000    done dumping db1.col1 (4 documents)
+2025-04-16T09:53:55.292+0000    done dumping db1.col3 (2 documents)
+2025-04-16T09:53:55.293+0000    writing db1.col2 to partial/db1/col2.bson
+2025-04-16T09:53:55.294+0000    done dumping db1.col2 (6 documents)
+```
+
+During restore, you can see how many records failed, and successful, example like below
+```
+2025-04-16T09:54:01.810+0000    preparing collections to restore from
+2025-04-16T09:54:01.810+0000    don't know what to do with file "partial/db1/prelude.json", skipping...
+2025-04-16T09:54:01.810+0000    reading metadata for db1.col1 from partial/db1/col1.metadata.json
+2025-04-16T09:54:01.827+0000    restoring to existing collection db1.col1 without dropping
+2025-04-16T09:54:01.827+0000    restoring db1.col1 from partial/db1/col1.bson
+2025-04-16T09:54:01.863+0000    continuing through error: E11000 duplicate key error collection: db1.col1 index: _id_ dup key: { _id: ObjectId('67fa0953080413f2d1181c5d') }
+2025-04-16T09:54:01.863+0000    continuing through error: E11000 duplicate key error collection: db1.col1 index: _id_ dup key: { _id: ObjectId('67fa0957080413f2d1181c60') }
+2025-04-16T09:54:01.864+0000    finished restoring db1.col1 (2 documents, 2 failures)
+2025-04-16T09:54:01.864+0000    no indexes to restore for collection db1.col1
+2025-04-16T09:54:01.864+0000    2 document(s) restored successfully. 2 document(s) failed to restore.
+```
+
+## How to handle new record 
+
+New records will be inserted, no issue
+
+## How to handle update of existing record
+
+Existing records will not be re-inserted, to any update to the existing records will not be updated to Atlas too. The solution is to delete the existing records in Atlas, then re-run the mongorestore
+
